@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>WebApp</title>
+    </head>
+    <body>
+        <img src="immagini/logo.jpg" alt="Login Icon" class="logo-vault">
+
+        <div class="box-login">
+            <h2 id="auth-title">login</h2>         
+                <form id="auth-form">
+                    <div class="input-group">
+                        <label for="username-text">Username:</label>
+                        <input type="text" id="username-text" placeholder="Username" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password-text">Password:</label>
+                        <input type="password" id="password-text" placeholder="Password" required>                           
+                    </div>
+
+                    <div class="buttons-container">
+
+                    <button type="button" onclick="gestisciAccesso()" id="btn-login">Accedi</button>
+                    <button type="button" id="btn-register" onclick="gestisciRegistrazione()" class="btn-secondary">Registrati</button>
+                </div>
+                
+                <button type="button" class="btn-link" onclick="window.location.href='forgot-password.html'">Forgot password?</button>
+                </form>
+        </div>
+
+<script src="js/auth.js"></script>
+    </body>
+</html>
