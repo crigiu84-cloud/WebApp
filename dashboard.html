@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Password Vault</title>
+    <link rel="stylesheet" href="styleDashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="/immagini/logoSenzaSfondo.png" alt="Logo Vault" class="logo-nav">
+            <span>Password Vault</span>
+        </div>
+        <div class="nav-user">
+            Benvenuto, <span id="nome-utente-loggato">...</span>
+            <button onclick="effettuaLogout()" class="btn-logout">Logout</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        
+        <section class="add-password-section">
+            <h3>Archivia una nuova password</h3>
+            <form id="form-credenziali" onsubmit="salvaCredenziale(event)">
+                <input type="text" id="sito-web" placeholder="Sito Web (es. Google, Instagram)" required>
+                <input type="text" id="username-sito" placeholder="Username / Email del sito" required>
+                <input type="password" id="password-sito" placeholder="Password del sito" required>
+                <button type="submit" class="btn-salva">Salva nel Vault</button>
+            </form>
+        </section>
+
+        <section class="vault-section">
+            <h3>Le tue Password Salvate</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sito Web</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-password">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
