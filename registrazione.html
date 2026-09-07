@@ -4,31 +4,28 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styleLogin.css">
-        <title>WebApp - Login</title>
+        <title>WebApp - Registrazione</title>
     </head>
     <body>
         <img src="immagini/logo.jpg" alt="Login Icon" class="logo-vault">
 
         <div class="box-login">
-            <h2 id="auth-title">login</h2>        
+            <h2 id="auth-title">Registrazione</h2>        
             <form id="auth-form">
                 <div class="input-group">
                     <label for="username-text">Username:</label>
-                    <input type="text" id="username-text" placeholder="Username" required>
+                    <input type="text" id="username-text" placeholder="Inserisci username" required>
                 </div>
 
                 <div class="input-group">
                     <label for="password-text">Password:</label>
-                    <input type="password" id="password-text" placeholder="Password" required>                           
+                    <input type="password" id="password-text" placeholder="Inserisci password" required>                           
                 </div>
 
                 <div class="buttons-container">
-                    <button type="button" onclick="gestisciAccesso()" id="btn-login">Accedi</button>
-                    <!-- Cambiato onclick per reindirizzare alla registrazione -->
-                    <button type="button" id="btn-register" onclick="vaiAllaRegistrazione()" class="btn-secondary">Registrati</button>
+                    <button type="button" onclick="gestisciRegistrazione()" id="btn-register-confirm">Crea Account</button>
+                    <button type="button" onclick="window.location.href='login.html'" class="btn-secondary">Torna al Login</button>
                 </div>
-                
-                <button type="button" class="btn-link" onclick="window.location.href='forgot-password.html'">Forgot password?</button>
             </form>
         </div>
 

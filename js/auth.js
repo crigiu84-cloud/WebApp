@@ -3,127 +3,137 @@ class Utente {
         this.username = username;
         this.password = btoa(password); // Codifica la password in Base64
         this.isSospeso = isSospeso; //attributo che serve per sospendere l'account in caso di troppi tentativi falliti, di default è false
+
+        //variabile contatore per i tentativi errati di accesso, se supera 3 blocca l'account per 30 secondi
+        let tentativiErrati = parseInt(localStorage.getItem('tentativiErrati')) || 0;
+        //variabile contatore per le volte che l'utente ha sbagliato 3 volte la login, se supera le 3 volte l'account viene sospeso
+        let volteBloccato = parseInt(localStorage.getItem('volteBloccato')) || 0;
     }
 }
 
-//variabile cntatore per i tentativi errati di accesso, se supera 3 blocca l'account per 30 secondi
-let tentativiErrati = 0;
-let volteBloccato = 0;
-let isUtenteInAttesa = false; //variabile per evitare che l'utente possa fare più tentativi durante il periodo di blocco
+// Legge i tentativi dal localStorage; se non esistono, parte da 0, se l'utente riesce a fare la login si azzerano
 
+
+// --- GESTIONE DELL'ACCESSO (In index.html) ---
 function gestisciAccesso() {
 
-    const usernameInput = document.getElementById('username').value;
-    const passwordInput = document.getElementById('password').value;
+    const usernameInput = document.getElementById('username-text').value.trim();
+    const passwordInput = document.getElementById('password-text').value;
 
-    //se l'utente è in attesa, non permetto la login
-    if (isUtenteInAttesa) {
-        alert("Il sistema è temporaneamente bloccato. Attendi che il timer scada.");
-        return;
-    }
-
-    //se ci sono errori nei campi, non permetto la login
-    if (!controllaCampi(usernameInput, passwordInput,false)) {
+    // se ci sono errori nei campi, non permetto la login
+    if (!controllaCampi(usernameInput, passwordInput, false)) {
         return; 
     }
 
-    /*cerchiamo nel local storage se esiste un utentecon quell'username,
-      se lo trova restituisce i dati in formato JSON
-      se non lo trova restituisce null*/
-    const utenteEsistente = localStorage.getItem(usernameInput);
+    /* cerchiamo nel local storage se esiste un utente con quel prefisso ed username,
+       se lo trova restituisce i dati in formato JSON
+       se non lo trova restituisce null */
+    const utenteEsistente = localStorage.getItem(`user_${usernameInput}`);
 
-    /*se l'utente esiste, converto l'utente trovato da JSON a un oggetto javascript */
     if (utenteEsistente) {
-        const datiUtente = JSON.parse(utenteEsistente);
+        /* se l'utente esiste, converto l'utente trovato da JSON a un oggetto javascript */
+        let datiUtente = JSON.parse(utenteEsistente);
 
-        //controllo se l'account è sospeso, in caso affermativo mostro un messaggio e blocco l'accesso
+        // controllo se l'account è sospeso, in caso affermativo mostro un messaggio e blocco l'accesso
         if (datiUtente.isSospeso === true) {
             alert('Account sospeso definitivamente per troppi tentativi falliti. Contatta l\'amministratore per assistenza.');
             return;
         }
 
-        /*se la password codificata in base 64 coincide con quella archiviata
+        // Controllo se questo specifico account è attualmente in blocco temporaneo
+        const adesso = Date.now();
+        const tempoBloccoFinoA = datiUtente.tempoBloccoFinoA || 0;
+
+        // se manca ancora tempo per sbloccare l'account, non permetto la login
+        if (adesso < tempoBloccoFinoA) {
+            const secondiRimanenti = Math.ceil((tempoBloccoFinoA - adesso) / 1000);
+            alert(`Questo account è temporaneamente bloccato. Attendi ancora ${secondiRimanenti} secondi.`);
+            return;
+        }
+
+        /* se la password codificata in base 64 coincide con quella archiviata
             allora l'accesso è consentito, salvando la sessione e reindirizzando alla pagina principale
             altrimenti viene mostrato un messaggio di errore, incrementando il contatore dei tentativi errati 
             e mostrando i tentativi rimasti
         */
         if (btoa(passwordInput) === datiUtente.password) {
             alert('Accesso eseguito con successo!');
-            tentativiErrati = 0;
-            volteBloccato = 0;
+            
+            // Azzeramento dei contatori dell'utente e aggiornamento del localStorage
+            datiUtente.tentativiErrati = 0;
+            datiUtente.volteBloccato = 0;
+            datiUtente.tempoBloccoFinoA = 0;
+            localStorage.setItem(`user_${usernameInput}`, JSON.stringify(datiUtente));
+
             sessionStorage.setItem('sessioneAttiva', usernameInput);
             window.location.href = 'dashboard.html'; 
             return;
         } else {
-            tentativiErrati++;
-            alert(`Password errata. Tentativi rimasti: ${3 - tentativiErrati}`);
-        }
-    } else {
-        tentativiErrati++; 
-        alert(`Username non trovato. Tentativi rimasti: ${3 - tentativiErrati}`);
-    }
-
-    if (tentativiErrati >= 3) {
-        volteBloccato++;
-
-        //se è la prima volta che viene bloccato, l'account viene bloccato per 30 secondi
-        if (volteBloccato === 1) {
-            isUtenteInAttesa = true;
-            alert('Account temporaneamente bloccato per troppi tentativi falliti. Ricarica la pagina per riprovare.');
-            
-            setTimeout(() => {
-                tentativiErrati = 0;
-                isUtenteInAttesa = false;
-            }, 30000);
-            return; 
+            // Password errata: incremento la variabile contatore dell'utente per i tentativi errati di accesso
+            datiUtente.tentativiErrati = (datiUtente.tentativiErrati || 0) + 1;
+            alert(`Password errata. Tentativi rimasti per questo account: ${Math.max(0, 3 - datiUtente.tentativiErrati)}`);
         }
 
-        //se è la seconda volta che viene bloccato, l'account viene bloccato per 1 minuto
-        if (volteBloccato === 2) {
-            isUtenteInAttesa = true;
-            alert('Account temporaneamente bloccato per troppi tentativi falliti. Ricarica la pagina per riprovare.');
+        // se sono stati fatti 3 o più tentativi errati di accesso su questo account, si blocca temporaneamente
+        if (datiUtente.tentativiErrati >= 3) {
+            // variabile contatore per le volte che l'utente ha sbagliato 3 volte la login
+            datiUtente.volteBloccato = (datiUtente.volteBloccato || 0) + 1;
 
-            setTimeout(() => {
-                tentativiErrati = 0;
-                isUtenteInAttesa = false;
-            }, 60000);
-            return;
-        }
+            // Azzeriamo i tentativi errati dell'utente al momento del blocco temporaneo
+            datiUtente.tentativiErrati = 0;
 
-        //se è la terza volta che viene bloccato, l'account viene bloccato per 5 minuti
-        if (volteBloccato === 3) {
-            isUtenteInAttesa = true;
-            alert('Account temporaneamente bloccato per troppi tentativi falliti. Ricarica la pagina per riprovare.');
-             
-            setTimeout(() => {
-                tentativiErrati = 0;
-                isUtenteInAttesa = false;
-            }, 300000);
-            return;
-        }
+            // variabile che indica la durata del blocco dell'account (in millisecondi)
+            let durataBloccoMs = 0;
 
-        if (volteBloccato >= 4) {
-            //è la quarta volta che viene bloccato, l'account viene sospeso definitivamente
-            //sospendo l'account, aggiornando l'oggetto utente nel local storage
-            isUtenteInAttesa = true; 
-            
-            if (utenteEsistente) {
-                const datiUtente = JSON.parse(utenteEsistente);
+            if (datiUtente.volteBloccato === 1) {
+                durataBloccoMs = 30000; // 30 secondi
+                alert('Account temporaneamente bloccato per 30 secondi per troppi tentativi falliti.');
+            } else if (datiUtente.volteBloccato === 2) {
+                durataBloccoMs = 60000; // 1 minuto
+                alert('Account temporaneamente bloccato per 1 minuto per troppi tentativi falliti.');
+            } else if (datiUtente.volteBloccato === 3) {
+                durataBloccoMs = 300000; // 5 minuti
+                alert('Account temporaneamente bloccato per 5 minuti per troppi tentativi falliti.');
+            } else if (datiUtente.volteBloccato >= 4) {
+                // se supera le 3 volte l'account viene sospeso definitivamente
                 datiUtente.isSospeso = true;
-                localStorage.setItem(usernameInput, JSON.stringify(datiUtente));
+                alert('Account sospeso definitivamente per troppi tentativi falliti. Contatta l\'amministratore.');
             }
-            
-            alert('Account sospeso definitivamente per troppi tentativi falliti. Contatta l\'amministratore per assistenza.');
-            return; 
+
+            // Salvo il timestamp futuro fino a cui il login per questo utente sarà bloccato
+            if (!datiUtente.isSospeso) {
+                datiUtente.tempoBloccoFinoA = Date.now() + durataBloccoMs;
+            }
         }
+
+        // Salvo nel localStorage lo stato aggiornato dell'utente
+        localStorage.setItem(`user_${usernameInput}`, JSON.stringify(datiUtente));
+
+    } else {
+        // Se l'username non esiste nel sistema
+        alert('Username non trovato.');
     }
 }
 
-function gestisciRegistrazione() {
-    const usernameInput = document.getElementById('username').value;
-    const passwordInput = document.getElementById('password').value;
 
-    if (!controllaCampi(usernameInput, passwordInput,true)) {
+// --- REINDIRIZZAMENTO ALLA REGISTRAZIONE ---
+function vaiAllaRegistrazione() {
+    window.location.href = 'registrazione.html';
+}
+
+
+// --- GESTIONE DELLA REGISTRAZIONE (In registrazione.html) ---
+function gestisciRegistrazione() {
+    const usernameInput = document.getElementById('username-text').value;
+    const passwordInput = document.getElementById('password-text').value;
+
+    // Evita di registrare utenti con il nome di variabili usate nello storage
+    if (usernameInput === 'tentativiErrati' || usernameInput === 'volteBloccato' || usernameInput === 'tempoBloccoFinoA') {
+        alert('Nome utente non disponibile. Scegli un altro username.');
+        return;
+    }
+
+    if (!controllaCampi(usernameInput, passwordInput, true)) {
         return;
     }
     
@@ -134,10 +144,13 @@ function gestisciRegistrazione() {
     } else {
         const nuovoUtente = new Utente(usernameInput, passwordInput);
         localStorage.setItem(usernameInput, JSON.stringify(nuovoUtente));
-        alert('Registrazione avvenuta con successo. Ora puoi accedere.');
+        alert('Registrazione avvenuta con successo. Ora verrai reindirizzato al login.');
+        window.location.href = 'index.html'; // Reindirizza al login dopo aver creato l'account
     }
 }
 
+
+// --- CONTROLLO DEI CAMPI DI INPUT ---
 function controllaCampi(usernameInput, passwordInput, isRegistrazione) {
     //variabili per i controlli sulla password
     let pswContainsNumber = false;
@@ -154,7 +167,7 @@ function controllaCampi(usernameInput, passwordInput, isRegistrazione) {
         return false;
     }
 
-    if(!isRegistrazione) {
+    if (!isRegistrazione) {
         return true; //se è una login, non faccio ulteriori controlli sui campi
     }
     
@@ -173,7 +186,7 @@ function controllaCampi(usernameInput, passwordInput, isRegistrazione) {
     }
 
     //---CONTROLLI PER LA PASSWORD NELLA REGISTRAZIONE---
-    if(passwordInput.length < 8) {
+    if (passwordInput.length < 8) {
         alert('La password deve contenere almeno 8 caratteri.');
         return false;
     }
@@ -185,15 +198,15 @@ function controllaCampi(usernameInput, passwordInput, isRegistrazione) {
             return false;
         }
         //controllo per almeno un numero
-        if(passwordInput[i] >= '0' && passwordInput[i] <= '9') {
+        if (passwordInput[i] >= '0' && passwordInput[i] <= '9') {
             pswContainsNumber = true;
         }
         //controllo per almeno una lettera maiuscola
-        if(passwordInput[i] >= 'A' && passwordInput[i] <= 'Z') {
+        if (passwordInput[i] >= 'A' && passwordInput[i] <= 'Z') {
             pswContainsUpper = true;
         }
         //controllo per almeno una lettera minuscola
-        if(passwordInput[i] >= 'a' && passwordInput[i] <= 'z') {
+        if (passwordInput[i] >= 'a' && passwordInput[i] <= 'z') {
             pswContainsLower = true;
         }
         //controllo per almeno un carattere speciale
@@ -202,22 +215,22 @@ function controllaCampi(usernameInput, passwordInput, isRegistrazione) {
         }
     }
    
-    if(!pswContainsNumber) {
+    if (!pswContainsNumber) {
         alert('La password deve contenere almeno un numero.');
         return false;
     }
 
-    if(!pswContainsSpecial) {
+    if (!pswContainsSpecial) {
         alert('La password deve contenere almeno un carattere speciale.');
         return false;
     }
 
-    if(!pswContainsUpper) {
+    if (!pswContainsUpper) {
         alert('La password deve contenere almeno una lettera maiuscola.');
         return false;
     }
 
-    if(!pswContainsLower) {
+    if (!pswContainsLower) {
         alert('La password deve contenere almeno una lettera minuscola.');
         return false;
     }
