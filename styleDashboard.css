@@ -269,6 +269,28 @@ tr:hover td {
     outline: none;
 }
 
+/* Stile per la textbox dell'Analyzer */
+.input-analyzer {
+    width: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #f8fafc;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-analyzer:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.input-analyzer::placeholder {
+    color: #64748b;
+}
+
 .btn-action, .btn-delete {
     background: transparent;
     border: none;
@@ -285,4 +307,171 @@ tr:hover td {
 
 .btn-delete:hover {
     color: #ef4444;
+}
+
+/* Gestione visibilità sezioni/tab */
+.tab-content {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+}
+
+.tab-content.active {
+    display: flex;
+}
+
+/* Griglia per Generator & Analyzer */
+.generator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    flex: 1;
+    align-items: stretch; /* Forza entrambe le card ad avere la stessa altezza */
+}
+
+.analyzer-results {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.strength-gauge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+}
+
+/* Cerchio esterno con lo sfondo dinamico */
+.circle-progress {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: conic-gradient(rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+/* Cerchio interno scuro che crea il "buco" rendendolo un anello */
+.circle-inner {
+    width: 80px;  /* 90px - 10px per avere un bordo spesso 5px */
+    height: 80px;
+    border-radius: 50%;
+    background-color: #0f172a; /* Stesso colore di sfondo della card */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Testo della percentuale ben visibile */
+#strength-percentage {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.badge-weak {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.analysis-details {
+    background-color: rgba(15, 23, 42, 0.4);
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1;
+}
+
+.analysis-details h4 {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 10px;
+}
+
+.analysis-details ul {
+    list-style: none;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.analysis-details li {
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Option Toggles Generator */
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.toggle-option {
+    font-size: 13px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.generated-output {
+    background-color: rgba(15, 23, 42, 0.8);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#output-password {
+    font-family: monospace;
+    font-size: 18px;
+    color: #60a5fa;
+    letter-spacing: 1px;
+}
+
+.btn-copy {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-copy:hover {
+    color: #ffffff;
+}
+
+.btn-primary-block {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-primary-block:hover {
+    background-color: #2563eb;
 }

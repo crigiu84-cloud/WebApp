@@ -13,10 +13,8 @@ class Utente {
     }
 }
 
-// Legge i tentativi dal localStorage; se non esistono, parte da 0, se l'utente riesce a fare la login si azzerano
 
-
-// --- GESTIONE DELL'ACCESSO (In index.html) ---
+// --- GESTIONE DELL'ACCESSO (In login.html) ---
 function gestisciAccesso() {
 
     const usernameInput = document.getElementById('username-text').value.trim();

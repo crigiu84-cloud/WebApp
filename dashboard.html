@@ -13,16 +13,16 @@
         <!-- Sidebar Laterale -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <img src="/immagini/logoSenzaSfondo.png" alt="Logo Vault" class="logo-nav">
+                <img src="immagini/logoSenzaSfondo.png" alt="Logo Vault" class="logo-nav">
                 <span>VAULT</span>
             </div>
 
             <nav class="sidebar-menu">
-                <a href="#" class="menu-item active"><i class="fa-solid fa-table-cells-large"></i> DASHBOARD</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-key"></i> GENERATOR</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-wallet"></i> VAULT</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-rotate-left"></i> HISTORY</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-gear"></i> SETTINGS</a>
+                <a href="#" class="menu-item active" onclick="cambiaSezione('dashboard')"><i class="fa-solid fa-table-cells-large"></i> DASHBOARD</a>
+                <a href="#" class="menu-item" onclick="cambiaSezione('generator')"><i class="fa-solid fa-key"></i> GENERATOR</a>
+                <a href="#" class="menu-item" onclick="cambiaSezione('vault')"><i class="fa-solid fa-wallet"></i> VAULT</a>
+                <a href="#" class="menu-item" onclick="cambiaSezione('history')"><i class="fa-solid fa-rotate-left"></i> HISTORY</a>
+                <a href="#" class="menu-item" onclick="cambiaSezione('settings')"><i class="fa-solid fa-gear"></i> SETTINGS</a>
             </nav>
 
             <div class="sidebar-footer">
@@ -38,54 +38,137 @@
 
         <!-- Contenuto Principale -->
         <main class="main-content">
-            <header class="content-header">
-                <h2>Dashboard & Vault Manager</h2>
-            </header>
+            
+            <!-- SCHEDA DASHBOARD -->
+            <div id="sezione-dashboard" class="tab-content active">
+                <header class="content-header">
+                    <h2>Dashboard Overview</h2>
+                </header>
 
-            <div class="dashboard-grid">
-                <!-- Sezione Aggiungi Password -->
-                <section class="card add-password-section">
-                    <h3><i class="fa-solid fa-plus-circle"></i> Archivia Nuova Password</h3>
-                    <form id="form-credenziali" onsubmit="salvaCredenziale(event)">
-                        <div class="form-group">
-                            <label>Sito Web</label>
-                            <input type="text" id="sito-web" placeholder="es. Google, Instagram" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Username / Email</label>
-                            <input type="text" id="username-sito" placeholder="utente@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Password</label>
-                            <input type="password" id="password-sito" placeholder="••••••••••••" required>
-                        </div>
-                        <button type="submit" class="btn-salva">Salva nel Vault</button>
-                    </form>
-                </section>
+                <div class="dashboard-grid">
+                    <section class="card add-password-section">
+                        <h3><i class="fa-solid fa-plus-circle"></i> Archivia Nuova Password</h3>
+                        <form id="form-credenziali" onsubmit="salvaCredenziale(event)">
+                            <div class="form-group">
+                                <label>Sito Web</label>
+                                <input type="text" id="sito-web" placeholder="es. Google, Instagram" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Username / Email</label>
+                                <input type="text" id="username-sito" placeholder="utente@email.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="password-sito" placeholder="••••••••••••" required>
+                            </div>
+                            <button type="submit" class="btn-salva">Salva nel Vault</button>
+                        </form>
+                    </section>
 
-                <!-- Sezione Lista Password -->
-                <section class="card vault-section">
-                    <h3><i class="fa-solid fa-shield-halved"></i> Le tue Password Salvate</h3>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Sito Web</th>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Azioni</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lista-password">
-                                <!-- Elementi dinamici gestiti via JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                    <section class="card vault-section">
+                        <h3><i class="fa-solid fa-shield-halved"></i> Le tue Password Salvate</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Sito Web</th>
+                                        <th>Username</th>
+                                        <th>Password</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-password">
+                                    <!-- Elementi dinamici -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
             </div>
+
+            <!-- SCHEDA GENERATOR -->
+            <div id="sezione-generator" class="tab-content">
+                <header class="content-header">
+                    <h2>Password Generator & Analyzer</h2>
+                </header>
+
+                <div class="generator-grid">
+                    
+                    <!-- CARD 1: STRENGTH ANALYZER -->
+                    <div class="card analyzer-card">
+                        <h3>Strength Analyzer</h3>
+                        
+                        <div class="form-group">
+                            <label>Testa una password</label>
+                            <input type="text" id="analyzer-input" class="input-analyzer" placeholder="Inserisci la password da testare..." oninput="analizzaPassword(this.value)">
+                        </div> <!-- CHIUSURA FORM-GROUP (MANCAVA!) -->
+
+                        <div class="analyzer-results">
+                            <div class="strength-gauge">
+                                <div class="circle-progress" id="gauge-circle">
+                                    <div class="circle-inner">
+                                        <span id="strength-percentage">0%</span>
+                                    </div>
+                                </div>
+                                <span id="strength-label" class="badge-weak">WEAK</span>
+                            </div>
+                            
+                            <div class="analysis-details">
+                                <h4><i class="fa-solid fa-circle-info"></i> ANALYSIS</h4>
+                                <ul id="analysis-list">
+                                    <li>Lunghezza minima ok: <span>No</span></li>
+                                    <li>Maiuscole incluse: <span>No</span></li>
+                                    <li>Numeri inclusi: <span>No</span></li>
+                                    <li>Caratteri speciali: <span>No</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div> <!-- CHIUSURA ANALYZER-CARD (MANCAVA!) -->
+
+                    <!-- CARD 2: PASSWORD GENERATOR -->
+                    <div class="card generator-card">
+                        <h3>Password Generator</h3>
+                        
+                        <div class="form-group">
+                            <div class="slider-header">
+                                <label>Length</label>
+                                <span id="length-val">16</span>
+                            </div>
+                            <input type="range" id="length-slider" min="8" max="32" value="16" oninput="aggiornaLunghezza(this.value)">
+                        </div>
+
+                        <div class="options-grid">
+                            <label class="toggle-option"><input type="checkbox" id="chk-uppercase" checked> Uppercase</label>
+                            <label class="toggle-option"><input type="checkbox" id="chk-lowercase" checked> Lowercase</label>
+                            <label class="toggle-option"><input type="checkbox" id="chk-numbers" checked> Numbers</label>
+                            <label class="toggle-option"><input type="checkbox" id="chk-symbols" checked> Symbols</label>
+                        </div>
+
+                        <div class="generated-output">
+                            <span id="output-password">k9$vG7P#wR!2aLp8</span>
+                            <button class="btn-copy" onclick="copiaGenerata()"><i class="fa-regular fa-copy"></i> COPY</button>
+                        </div>
+
+                        <button class="btn-primary-block" onclick="generaPassword()">REGENERATE PASSWORD</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ALTRE SCHEDE (VAULT, HISTORY, SETTINGS) -->
+            <div id="sezione-vault" class="tab-content">
+                <header class="content-header"><h2>Vault Completo</h2></header>
+            </div>
+            <div id="sezione-history" class="tab-content">
+                <header class="content-header"><h2>Storico Attività</h2></header>
+            </div>
+            <div id="sezione-settings" class="tab-content">
+                <header class="content-header"><h2>Impostazioni</h2></header>
+            </div>
+
         </main>
     </div>
 
-    <script src="dashboard.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 </html>
