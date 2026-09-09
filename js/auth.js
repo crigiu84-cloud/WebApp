@@ -5,9 +5,11 @@ class Utente {
         this.isSospeso = isSospeso; //attributo che serve per sospendere l'account in caso di troppi tentativi falliti, di default è false
 
         //variabile contatore per i tentativi errati di accesso, se supera 3 blocca l'account per 30 secondi
-        let tentativiErrati = parseInt(localStorage.getItem('tentativiErrati')) || 0;
+        this.tentativiErrati = 0;
         //variabile contatore per le volte che l'utente ha sbagliato 3 volte la login, se supera le 3 volte l'account viene sospeso
-        let volteBloccato = parseInt(localStorage.getItem('volteBloccato')) || 0;
+        this.volteBloccato = 0;
+
+        this.tempoBloccoFinoA = 0;
     }
 }
 
@@ -137,13 +139,13 @@ function gestisciRegistrazione() {
         return;
     }
     
-    const utenteEsistente = localStorage.getItem(usernameInput);
+    const utenteEsistente = localStorage.getItem(`user_${usernameInput}`);
 
     if (utenteEsistente) {
         alert('Utente già esistente. Scegli un username diverso o accedi con quello esistente.');
     } else {
         const nuovoUtente = new Utente(usernameInput, passwordInput);
-        localStorage.setItem(usernameInput, JSON.stringify(nuovoUtente));
+        localStorage.setItem(`user_${usernameInput}`, JSON.stringify(nuovoUtente));
         alert('Registrazione avvenuta con successo. Ora verrai reindirizzato al login.');
         window.location.href = 'index.html'; // Reindirizza al login dopo aver creato l'account
     }

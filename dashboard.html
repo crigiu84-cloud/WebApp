@@ -3,54 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Password Vault</title>
+    <title>Vault - Secure Password Hub</title>
     <link rel="stylesheet" href="styleDashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-logo">
-            <img src="/immagini/logoSenzaSfondo.png" alt="Logo Vault" class="logo-nav">
-            <span>Password Vault</span>
-        </div>
-        <div class="nav-user">
-            Benvenuto, <span id="nome-utente-loggato">...</span>
-            <button onclick="effettuaLogout()" class="btn-logout">Logout</button>
-        </div>
-    </nav>
-
-    <main class="dashboard-container">
-        
-        <section class="add-password-section">
-            <h3>Archivia una nuova password</h3>
-            <form id="form-credenziali" onsubmit="salvaCredenziale(event)">
-                <input type="text" id="sito-web" placeholder="Sito Web (es. Google, Instagram)" required>
-                <input type="text" id="username-sito" placeholder="Username / Email del sito" required>
-                <input type="password" id="password-sito" placeholder="Password del sito" required>
-                <button type="submit" class="btn-salva">Salva nel Vault</button>
-            </form>
-        </section>
-
-        <section class="vault-section">
-            <h3>Le tue Password Salvate</h3>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Sito Web</th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-password">
-                        </tbody>
-                </table>
+    <div class="app-layout">
+        <!-- Sidebar Laterale -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <img src="/immagini/logoSenzaSfondo.png" alt="Logo Vault" class="logo-nav">
+                <span>VAULT</span>
             </div>
-        </section>
 
-    </main>
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active"><i class="fa-solid fa-table-cells-large"></i> DASHBOARD</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-key"></i> GENERATOR</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-wallet"></i> VAULT</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-rotate-left"></i> HISTORY</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-gear"></i> SETTINGS</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span id="nome-utente-loggato">Utente</span>
+                </div>
+                <button onclick="effettuaLogout()" class="btn-logout-icon" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenuto Principale -->
+        <main class="main-content">
+            <header class="content-header">
+                <h2>Dashboard & Vault Manager</h2>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Sezione Aggiungi Password -->
+                <section class="card add-password-section">
+                    <h3><i class="fa-solid fa-plus-circle"></i> Archivia Nuova Password</h3>
+                    <form id="form-credenziali" onsubmit="salvaCredenziale(event)">
+                        <div class="form-group">
+                            <label>Sito Web</label>
+                            <input type="text" id="sito-web" placeholder="es. Google, Instagram" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Username / Email</label>
+                            <input type="text" id="username-sito" placeholder="utente@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="password-sito" placeholder="••••••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-salva">Salva nel Vault</button>
+                    </form>
+                </section>
+
+                <!-- Sezione Lista Password -->
+                <section class="card vault-section">
+                    <h3><i class="fa-solid fa-shield-halved"></i> Le tue Password Salvate</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sito Web</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-password">
+                                <!-- Elementi dinamici gestiti via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
 
     <script src="dashboard.js"></script>
 </body>

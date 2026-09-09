@@ -4,32 +4,37 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styleLogin.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <title>WebApp - Login</title>
     </head>
     <body>
-        <img src="immagini/logo.jpg" alt="Login Icon" class="logo-vault">
+        <div class="auth-card">
+            <div class="brand-header">
+                <img src="immagini/logoSenzaSfondo.png" alt="Login Icon" class="logo-vault">
+                <span class="brand-title">VAULT</span>
+            </div>
 
-        <div class="box-login">
-            <h2 id="auth-title">login</h2>        
-            <form id="auth-form">
-                <div class="input-group">
-                    <label for="username-text">Username:</label>
-                    <input type="text" id="username-text" placeholder="Username" required>
-                </div>
+            <div class="box-login">
+                <h2 id="auth-title">Accedi</h2>        
+                <form id="auth-form">
+                    <div class="input-group">
+                        <label for="username-text">Username</label>
+                        <input type="text" id="username-text" placeholder="Inserisci il tuo username" required>
+                    </div>
 
-                <div class="input-group">
-                    <label for="password-text">Password:</label>
-                    <input type="password" id="password-text" placeholder="Password" required>                           
-                </div>
+                    <div class="input-group">
+                        <label for="password-text">Password</label>
+                        <input type="password" id="password-text" placeholder="••••••••••••" required>                           
+                    </div>
 
-                <div class="buttons-container">
-                    <button type="button" onclick="gestisciAccesso()" id="btn-login">Accedi</button>
-                    <!-- Cambiato onclick per reindirizzare alla registrazione -->
-                    <button type="button" id="btn-register" onclick="vaiAllaRegistrazione()" class="btn-secondary">Registrati</button>
-                </div>
-                
-                <button type="button" class="btn-link" onclick="window.location.href='forgot-password.html'">Forgot password?</button>
-            </form>
+                    <button type="button" class="btn-link" onclick="window.location.href='forgot-password.html'">Forgot password?</button>
+
+                    <div class="buttons-container">
+                        <button type="button" onclick="gestisciAccesso()" id="btn-login" class="btn-primary">Accedi</button>
+                        <button type="button" id="btn-register" onclick="vaiAllaRegistrazione()" class="btn-secondary">Registrati</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <script src="js/auth.js"></script>
