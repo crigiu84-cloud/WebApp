@@ -145,93 +145,102 @@ function gestisciRegistrazione() {
         const nuovoUtente = new Utente(usernameInput, passwordInput);
         localStorage.setItem(`user_${usernameInput}`, JSON.stringify(nuovoUtente));
         alert('Registrazione avvenuta con successo. Ora verrai reindirizzato al login.');
-        window.location.href = 'index.html'; // Reindirizza al login dopo aver creato l'account
+        window.location.href = 'login.html'; // Reindirizza al login dopo aver creato l'account
     }
 }
 
 
-// --- CONTROLLO DEI CAMPI DI INPUT ---
+// --- CONTROLLO PASSWORD IN TEMPO REALE (Mentre si digita) ---
+function validaPasswordInTempoReale() {
+    let passwordInput = document.getElementById('password-text').value;
+
+    // Stringa con i caratteri speciali consentiti
+    let specialChars = "!@#$%^&*(),.?\":{}|<>-_[]";
+
+    // Variabili booleane per verificare i singoli requisiti
+    let haLunghezza = passwordInput.length >= 8;
+    let haMaiuscola = false;
+    let haMinuscola = false;
+    let haNumero = false;
+    let haSpeciale = false;
+    let haSpazio = false;
+
+    // Ciclo for per analizzare ogni carattere della password
+    for (let i = 0; i < passwordInput.length; i++) {
+        let c = passwordInput[i];
+
+        if (c == ' ') {
+            haSpazio = true;
+        }
+        if (c >= 'A' && c <= 'Z') {
+            haMaiuscola = true;
+        }
+        if (c >= 'a' && c <= 'z') {
+            haMinuscola = true;
+        }
+        if (c >= '0' && c <= '9') {
+            haNumero = true;
+        }
+        if (specialChars.indexOf(c) !== -1) {
+            haSpeciale = true;
+        }
+    }
+
+    // Funzione interna di supporto per aggiornare lo stile degli elementi HTML
+    function aggiornaStatoRequisito(idElemento, eValido, testoOK, testoErrato) {
+        let el = document.getElementById(idElemento);
+        if (el == null) return;
+
+        if (eValido) {
+            el.style.color = '#22c55e'; // Verde
+            el.innerText = '✔ ' + testoOK;
+        } else {
+            el.style.color = '#ef4444'; // Rosso
+            el.innerText = '✖ ' + testoErrato;
+        }
+    }
+
+    // Aggiorniamo i vari messaggi di requisito a schermo
+    aggiornaStatoRequisito('req-length', haLunghezza, 'Almeno 8 caratteri', 'Almeno 8 caratteri');
+    aggiornaStatoRequisito('req-upper', haMaiuscola, 'Almeno una lettera maiuscola', 'Almeno una lettera maiuscola');
+    aggiornaStatoRequisito('req-lower', haMinuscola, 'Almeno una lettera minuscola', 'Almeno una lettera minuscola');
+    aggiornaStatoRequisito('req-number', haNumero, 'Almeno un numero', 'Almeno un numero');
+    aggiornaStatoRequisito('req-special', haSpeciale, 'Almeno un carattere speciale', 'Almeno un carattere speciale');
+    
+    // Per lo spazio, il controllo è superato se NON ci sono spazi (!haSpazio)
+    aggiornaStatoRequisito('req-space', !haSpazio, 'Nessun spazio presente', 'La password non può contenere spazi');
+
+    // Restituisce true solo se TUTTI i requisiti sono rispettati
+    return haLunghezza && haMaiuscola && haMinuscola && haNumero && haSpeciale && !haSpazio;
+}
+
+
+// --- FUNZONE CHE ANALIZZA I CAMPI DELL'USERNAME E DELLA PASSWORD ---
 function controllaCampi(usernameInput, passwordInput, isRegistrazione) {
-    //variabili per i controlli sulla password
-    let pswContainsNumber = false;
-    let pswContainsSpecial = false;
-    let pswContainsUpper = false;
-    let pswContainsLower = false;
-
-    //stringa con i caratteri speciali consentiti per la password
-    const specialChars = "!@#$%^&*(),.?\":{}|<>-_[]";
-
-    //controlli per l'username
-    if (usernameInput === '' || passwordInput === '') {
+    if (usernameInput == '' || passwordInput == '') {
         alert('Per favore, inserisci sia username che password.');
         return false;
     }
 
     if (!isRegistrazione) {
-        return true; //se è una login, non faccio ulteriori controlli sui campi
+        return true; // Se è il login, non servono ulteriori controlli sulla robustezza
     }
-    
-    //---CONTROLLI PER L'USERNAME NELLA REGISTRAZIONE---
+
+    // Controlli per l'Username
     if (usernameInput.length < 5) {
         alert('L\'username deve contenere almeno 5 caratteri.');
         return false;
     }
 
-    for (let i = 0; i < usernameInput.length; i++) {
-        //controllo per gli spazi
-        if (usernameInput[i] === ' ') {
-            alert('L\'username non può contenere spazi.');
-            return false;
-        }
-    }
-
-    //---CONTROLLI PER LA PASSWORD NELLA REGISTRAZIONE---
-    if (passwordInput.length < 8) {
-        alert('La password deve contenere almeno 8 caratteri.');
+    if (usernameInput.indexOf(' ') !== -1) {
+        alert('L\'username non può contenere spazi.');
         return false;
     }
 
-    for (let i = 0; i < passwordInput.length; i++) {
-        //controllo per gli spazi
-        if (passwordInput[i] === ' ') {
-            alert('La password non può contenere spazi.');
-            return false;
-        }
-        //controllo per almeno un numero
-        if (passwordInput[i] >= '0' && passwordInput[i] <= '9') {
-            pswContainsNumber = true;
-        }
-        //controllo per almeno una lettera maiuscola
-        if (passwordInput[i] >= 'A' && passwordInput[i] <= 'Z') {
-            pswContainsUpper = true;
-        }
-        //controllo per almeno una lettera minuscola
-        if (passwordInput[i] >= 'a' && passwordInput[i] <= 'z') {
-            pswContainsLower = true;
-        }
-        //controllo per almeno un carattere speciale
-        if (specialChars.includes(passwordInput[i])) {
-            pswContainsSpecial = true;
-        }
-    }
-   
-    if (!pswContainsNumber) {
-        alert('La password deve contenere almeno un numero.');
-        return false;
-    }
-
-    if (!pswContainsSpecial) {
-        alert('La password deve contenere almeno un carattere speciale.');
-        return false;
-    }
-
-    if (!pswContainsUpper) {
-        alert('La password deve contenere almeno una lettera maiuscola.');
-        return false;
-    }
-
-    if (!pswContainsLower) {
-        alert('La password deve contenere almeno una lettera minuscola.');
+    // Controlliamo la password richiamando la validazione
+    let passwordValida = validaPasswordInTempoReale();
+    if (passwordValida == false) {
+        alert('La password non rispetta tutti i requisiti di sicurezza!');
         return false;
     }
 

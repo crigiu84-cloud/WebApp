@@ -21,8 +21,6 @@
                 <a href="#" class="menu-item active" onclick="cambiaSezione('dashboard')"><i class="fa-solid fa-table-cells-large"></i> DASHBOARD</a>
                 <a href="#" class="menu-item" onclick="cambiaSezione('generator')"><i class="fa-solid fa-key"></i> GENERATOR</a>
                 <a href="#" class="menu-item" onclick="cambiaSezione('vault')"><i class="fa-solid fa-wallet"></i> VAULT</a>
-                <a href="#" class="menu-item" onclick="cambiaSezione('history')"><i class="fa-solid fa-rotate-left"></i> HISTORY</a>
-                <a href="#" class="menu-item" onclick="cambiaSezione('settings')"><i class="fa-solid fa-gear"></i> SETTINGS</a>
             </nav>
 
             <div class="sidebar-footer">
@@ -36,10 +34,8 @@
             </div>
         </aside>
 
-        <!-- Contenuto Principale -->
         <main class="main-content">
             
-            <!-- SCHEDA DASHBOARD -->
             <div id="sezione-dashboard" class="tab-content active">
                 <header class="content-header">
                     <h2>Dashboard Overview</h2>
@@ -50,8 +46,10 @@
                         <h3><i class="fa-solid fa-plus-circle"></i> Archivia Nuova Password</h3>
                         <form id="form-credenziali" onsubmit="salvaCredenziale(event)">
                             <div class="form-group">
-                                <label>Sito Web</label>
-                                <input type="text" id="sito-web" placeholder="es. Google, Instagram" required>
+                                <div class="input-group">
+                                    <label for="sito-web">URL Sito Web</label>
+                                    <input type="url" id="sito-web" placeholder="https://www.google.com" required>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Username / Email</label>
@@ -62,6 +60,7 @@
                                 <input type="password" id="password-sito" placeholder="••••••••••••" required>
                             </div>
                             <button type="submit" class="btn-salva">Salva nel Vault</button>
+                            <button type="button" onclick="resetForm()" class="btn-salva" style="margin-top: 5px;">Annulla / Pulisci</button>
                         </form>
                     </section>
 
@@ -86,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- SCHEDA GENERATOR -->
             <div id="sezione-generator" class="tab-content">
                 <header class="content-header">
                     <h2>Password Generator & Analyzer</h2>
@@ -94,14 +92,13 @@
 
                 <div class="generator-grid">
                     
-                    <!-- CARD 1: STRENGTH ANALYZER -->
                     <div class="card analyzer-card">
                         <h3>Strength Analyzer</h3>
                         
                         <div class="form-group">
                             <label>Testa una password</label>
                             <input type="text" id="analyzer-input" class="input-analyzer" placeholder="Inserisci la password da testare..." oninput="analizzaPassword(this.value)">
-                        </div> <!-- CHIUSURA FORM-GROUP (MANCAVA!) -->
+                        </div> 
 
                         <div class="analyzer-results">
                             <div class="strength-gauge">
@@ -123,9 +120,8 @@
                                 </ul>
                             </div>
                         </div>
-                    </div> <!-- CHIUSURA ANALYZER-CARD (MANCAVA!) -->
+                    </div> 
 
-                    <!-- CARD 2: PASSWORD GENERATOR -->
                     <div class="card generator-card">
                         <h3>Password Generator</h3>
                         
@@ -155,17 +151,36 @@
                 </div>
             </div>
 
-            <!-- ALTRE SCHEDE (VAULT, HISTORY, SETTINGS) -->
             <div id="sezione-vault" class="tab-content">
-                <header class="content-header"><h2>Vault Completo</h2></header>
-            </div>
-            <div id="sezione-history" class="tab-content">
-                <header class="content-header"><h2>Storico Attività</h2></header>
-            </div>
-            <div id="sezione-settings" class="tab-content">
-                <header class="content-header"><h2>Impostazioni</h2></header>
-            </div>
+                <header class="content-header">
+                    <h2>Vault Completo</h2>
+                    <p>Archivio e ricerca delle credenziali salvate</p>
+                </header>
 
+                <div class="card vault-full-card" style="margin-top: 20px;">
+                    <div class="search-bar-container" style="margin-bottom: 20px;">
+                        <div class="input-group">
+                            <input type="text" id="input-ricerca-vault" oninput="cercaNelVault()" placeholder="Cerca per sito, URL o username..." style="width: 100%; padding: 12px; border-radius: 8px; font-size: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff;">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sito Web</th>
+                                    <th>Username / Email</th>
+                                    <th>Password</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-vault-sola-lettura">
+                                <!-- Elementi dinamici caricati da JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 

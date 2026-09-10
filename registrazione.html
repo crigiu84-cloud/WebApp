@@ -23,8 +23,17 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="password-text">Password</label>
-                        <input type="password" id="password-text" placeholder="Crea una password sicura" required>                           
+                        <label for="password-text">Password</label>                        
+                        <input type="password" id="password-text" placeholder="Crea una password sicura" oninput="validaPasswordInTempoReale()" required>
+                    </div>
+
+                    <div class="password-requirements" style="font-size: 0.85rem; margin-top: 8px; margin-bottom: 15px;">
+                        <p id="req-length" style="color: #ef4444; margin: 3px 0;">✖ Almeno 8 caratteri</p>
+                        <p id="req-upper" style="color: #ef4444; margin: 3px 0;">✖ Almeno una lettera maiuscola</p>
+                        <p id="req-lower" style="color: #ef4444; margin: 3px 0;">✖ Almeno una lettera minuscola</p>
+                        <p id="req-number" style="color: #ef4444; margin: 3px 0;">✖ Almeno un numero</p>
+                        <p id="req-special" style="color: #ef4444; margin: 3px 0;">✖ Almeno un carattere speciale</p>
+                        <p id="req-space" style="color: #22c55e; margin: 3px 0;">✔ Nessun spazio presente</p>
                     </div>
 
                     <div class="buttons-container">
