@@ -25,20 +25,6 @@
 
 ---
 
-##Architettura e Struttura File
-
-```text
-├── login.html              # Interfaccia di autenticazione (Login)
-├── registrazione.html      # Form di creazione nuovo account
-├── dashboard.html          # Layout principale (Dashboard, Generator, Vault)
-├── styleLogin.css          # Stili per la schermata di Login e Registrazione
-├── styleDashboard.css      # Stili per la Dashboard e la Sidebar
-├── js/
-│   ├── auth.js             # Logica di autenticazione, sicurezza e validazione
-│   └── dashboard.js        # Gestione UI tab, generatore password, CRUD vault e ricerca
-└── immagini/
-    └── logoSenzaSfondo.png # Logo dell'applicazione
-
 **Persistenza Dati (Web Storage)**
 L'applicazione non richiede un backend e utilizza esclusivamente le API del browser:
 
@@ -54,3 +40,19 @@ Clicca su Registrati per creare un nuovo account verificando i requisiti di sicu
 Effettua il login per accedere alla Dashboard Overview.
 
 Naviga attraverso la sidebar laterale per generare nuove password o consultare l'archivio completo.
+
+##Architettura e Struttura File
+
+```text
+├── login.html              # Interfaccia di autenticazione (Login)
+├── registrazione.html      # Form di creazione nuovo account
+├── dashboard.html          # Layout principale (Dashboard, Generator, Vault)
+├── styleLogin.css          # Stili per la schermata di Login e Registrazione
+├── styleDashboard.css      # Stili per la Dashboard e la Sidebar
+├── js/
+│   ├── auth.js             # Logica di autenticazione, sicurezza e validazione
+│   └── dashboard.js        # Gestione UI tab, generatore password, CRUD vault e ricerca
+└── immagini/
+    └── logoSenzaSfondo.png # Logo dell'applicazione
+
+
