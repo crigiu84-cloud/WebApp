@@ -1,29 +1,56 @@
-# 🔐 LockBox - Local Password Manager
+#VAULT - Secure Password Hub
 
-**LockBox** è una web applicazione leggera e sicura progettata per archiviare e gestire le proprie credenziali d'accesso direttamente nel browser. Il progetto è sviluppato interamente lato client senza gestire il lato server
-
-Questo progetto è stato strutturato in modo modulare per consentire uno sviluppo progressivo, documentato passo dopo passo attraverso i commit di GitHub.
+**Vault** è una Web Application per la gestione sicura e l'archiviazione locale delle credenziali di accesso. L'applicazione offre un'interfaccia responsive e include moduli per la registrazione/login, un generatore avanzato di password casuali, un analizzatore di robustezza in tempo reale e un archivio personalizzato per ciascun utente.
 
 ---
 
-## 🚀 Funzionalità Principali (Roadmap)
+##Caratteristiche Principali
 
-L'applicazione viene sviluppata seguendo questi moduli logici:
+* **Gestione Autenticazione & Sicurezza Accessi:**
+  * Validazione dei requisiti password in tempo reale (lunghezza, maiuscole, minuscole, numeri, caratteri speciali e assenza di spazi).
+  * Offuscamento base64 delle password utente prima del salvataggio nel database locale.
+  * Meccanismo di blocco temporaneo progressivo (30s, 1m, 5m) dopo 3 tentativi di login falliti.
+  * Sospensione permanente dell'account al superamento dei 4 blocchi temporanei.
 
-- [x] **Modulo 1: Interfaccia di Autenticazione** -> Schermata di Login responsive in Dark Mode sviluppata con CSS Grid e Flexbox.
+* **Dashboard Overview:**
+  * Form dinamico per la creazione e la modifica (CRUD) delle credenziali salvate.
+  * Tabella interattiva per visualizzare, mostrare/nascondere, copiare negli appunti o eliminare le credenziali.
 
+* **Password Generator & Strength Analyzer:**
+  * Generatore casuale configurabile tramite slider (lunghezza 8-32 caratteri) e selettori per tipologie di caratteri.
+  * Grafico circolare dinamico (*conic-gradient*) che assegna un punteggio di sicurezza (0-100%) con etichette visive (WEAK, MEDIUM, STRONG).
+
+* **Vault Completo:**
+  * Sezione dedicata alla consultazione rapida con barra di ricerca in tempo reale per sito web o username.
 
 ---
 
-## Tecnologie Utilizzate
+##Architettura e Struttura File
 
-* **HTML5:** Struttura semantica dell'applicazione.
-* **CSS3:** Layout moderno, variabili CSS per la gestione dei colori e transizioni fluide.
-* **JavaScript (ES6+):** Manipolazione del DOM, gestione degli eventi e persistenza dei dati.
-* **Web Storage API (`localStorage`):** Utilizzata per memorizzare  i dati sul dispositivo dell'utente senza la necessità di un database.
+```text
+├── login.html              # Interfaccia di autenticazione (Login)
+├── registrazione.html      # Form di creazione nuovo account
+├── dashboard.html          # Layout principale (Dashboard, Generator, Vault)
+├── styleLogin.css          # Stili per la schermata di Login e Registrazione
+├── styleDashboard.css      # Stili per la Dashboard e la Sidebar
+├── js/
+│   ├── auth.js             # Logica di autenticazione, sicurezza e validazione
+│   └── dashboard.js        # Gestione UI tab, generatore password, CRUD vault e ricerca
+└── immagini/
+    └── logoSenzaSfondo.png # Logo dell'applicazione
 
----
+**Persistenza Dati (Web Storage)**
+L'applicazione non richiede un backend e utilizza esclusivamente le API del browser:
 
-## Struttura della Repository
+localStorage: Utilizzato per archiviare gli account utenti (user_<username>) e le tabelle di credenziali individuali (vault_<username>).
 
-Appena si apre il sito l'utente si trova nella pagina di login in cui dovrà inserire le proprie credenziali per accedere: in caso che sia la prima volta che l'utente accede dovrà fare la login. [DA COMPLETARE]
+sessionStorage: Mantiene la chiave sessioneAttiva per controllare la sessione di navigazione corrente dell'utente loggato.
+
+**Guida all'Uso**
+Apri il file login.html in qualsiasi browser web moderno.
+
+Clicca su Registrati per creare un nuovo account verificando i requisiti di sicurezza.
+
+Effettua il login per accedere alla Dashboard Overview.
+
+Naviga attraverso la sidebar laterale per generare nuove password o consultare l'archivio completo.
